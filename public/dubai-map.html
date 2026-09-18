@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html,body{margin:0;height:100%;background:#0c1120;font-family:system-ui,sans-serif}
+  #map{position:absolute;inset:0;background:#0c1120}
+  .leaflet-tile-pane{filter:invert(1) hue-rotate(185deg) brightness(.88) contrast(.9) saturate(.4)}
+  .leaflet-container{background:#0c1120}
+  .leaflet-control-attribution{background:rgba(9,12,20,.7)!important;color:#877f73!important;font-size:9px!important}
+  .leaflet-control-attribution a{color:#a8a195!important}
+  .leaflet-bar a{background:#141a28!important;color:#ecd898!important;border-color:rgba(212,175,55,.3)!important}
+  .leaflet-bar a:hover{background:#1e263a!important}
+  .cr-label{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:#cec8bb;white-space:nowrap;text-shadow:0 1px 4px #000;padding-left:14px}
+  .cr-label.on{color:#f7ecc4}
+  .legend{position:absolute;left:12px;bottom:26px;z-index:500;display:flex;gap:16px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:#877f73;background:rgba(9,12,20,.72);padding:8px 12px;border:1px solid rgba(212,175,55,.22);border-radius:6px}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:50%;display:block}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="legend">
+  <span><i style="background:#d4af37"></i>Beds available</span>
+  <span><i style="background:#665f55"></i>At capacity</span>
+</div>
+<script>
+const SITES = [
+  { id:'son',  name:'Sonapur Camp 1',    area:'Sonapur / Muhaisnah',       type:'Labour camp',          capacity:3200, beds:180, rooms:420, lat:25.2854, lng:55.4200, configs:['6-bed','8-bed'] },
+  { id:'son2', name:'Muhaisnah Block C', area:'Sonapur / Muhaisnah',       type:'Staff accommodation',  capacity:1600, beds:0,   rooms:260, lat:25.2967, lng:55.4055, configs:['4-bed','6-bed'] },
+  { id:'jaf',  name:'Jebel Ali Camp 3',  area:'Jebel Ali Industrial Area', type:'Labour camp',          capacity:4800, beds:640, rooms:610, lat:25.0025, lng:55.1150, configs:['6-bed','8-bed','Supervisor suite'] },
+  { id:'dip',  name:'DIP Residences',    area:'Dubai Investments Park',    type:'Staff accommodation',  capacity:2400, beds:310, rooms:390, lat:24.9720, lng:55.1745, configs:['4-bed','6-bed','Supervisor suite'] },
+  { id:'quo',  name:'Al Quoz Block 4',   area:'Al Quoz',                   type:'Supervisor block',     capacity:520,  beds:64,  rooms:130, lat:25.1385, lng:55.2320, configs:['4-bed','Supervisor suite'] },
+  { id:'qus',  name:'Al Qusais Camp 2',  area:'Al Qusais',                 type:'Labour camp',          capacity:1900, beds:0,   rooms:300, lat:25.2807, lng:55.3760, configs:['6-bed','8-bed'] },
+  { id:'rak',  name:'Ras Al Khor Lodge', area:'Ras Al Khor',               type:'Staff accommodation',  capacity:900,  beds:120, rooms:180, lat:25.1810, lng:55.3320, configs:['4-bed','6-bed'] }
+];
+const fmt = n => Number(n).toLocaleString('en-US');
+const map = L.map('map', { zoomControl:true, scrollWheelZoom:false, attributionControl:true });
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap contributors', maxZoom:18 }).addTo(map);
+map.fitBounds(SITES.map(s => [s.lat, s.lng]), { padding:[54,54] });
+
+let selected = 'jaf', filter = null, layers = {};
+
+function popupHtml(s){
+  return '<div style="font-family:system-ui,sans-serif;min-width:186px">'
+   + '<div style="font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:#a8871f;margin-bottom:5px">'+s.area+'</div>'
+   + '<div style="font-size:15px;font-weight:600;color:#17150f;margin-bottom:9px">'+s.name+'</div>'
+   + '<div style="display:flex;gap:16px;font-size:12px;color:#4a453d"><span><b>'+fmt(s.capacity)+'</b> capacity</span>'
+   + '<span><b>'+(s.beds>0?fmt(s.beds):'0')+'</b> beds free</span></div></div>';
+}
+
+function draw(){
+  Object.values(layers).forEach(l => l.forEach(x => map.removeLayer(x)));
+  layers = {};
+  const list = filter ? SITES.filter(s => filter.indexOf(s.id) > -1) : SITES;
+  list.forEach(s => {
+    const on = s.id === selected, free = s.beds > 0;
+    const col = free ? '#d4af37' : '#665f55';
+    const dot = L.circleMarker([s.lat, s.lng], {
+      radius: on ? 11 : 7, color: col, weight: on ? 3 : 2,
+      fillColor: col, fillOpacity: on ? .95 : .55
+    }).addTo(map);
+    const halo = on ? L.circleMarker([s.lat, s.lng], { radius:20, color:col, weight:1, opacity:.45, fillColor:col, fillOpacity:.1 }).addTo(map) : null;
+    const label = L.marker([s.lat, s.lng], {
+      icon: L.divIcon({ className:'', html:'<div class="cr-label'+(on?' on':'')+'">'+s.name+'</div>', iconSize:[0,0], iconAnchor:[0,6] }),
+      interactive:false
+    }).addTo(map);
+    dot.bindPopup(popupHtml(s), { closeButton:false, offset:[0,-4] });
+    dot.on('mouseover', () => { dot.openPopup(); post('hover', s.id); });
+    dot.on('mouseout', () => dot.closePopup());
+    dot.on('click', () => { selected = s.id; post('select', s.id); draw(); });
+    layers[s.id] = halo ? [dot, label, halo] : [dot, label];
+  });
+}
+function post(type, id){ parent.postMessage({ source:'credence-map', type, id }, '*'); }
+window.addEventListener('message', e => {
+  const d = e.data || {};
+  if (d.source !== 'credence-host') return;
+  if (d.type === 'select') { selected = d.id; draw(); }
+  if (d.type === 'filter') { filter = d.ids; draw(); }
+});
+draw();
+</script>
+</body>
+</html>

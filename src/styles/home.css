@@ -1,0 +1,24 @@
+.ghost-num{position:absolute;right:-6px;bottom:-30px;font-family:var(--font-heading);font-size:150px;font-weight:500;line-height:1;color:rgba(212,175,55,.055);pointer-events:none;letter-spacing:-.05em}
+.light-band{
+  --color-bg:#f7f4ec; --color-surface:#fffdf7; --color-text:#17150f;
+  --color-neutral-100:#17150f; --color-neutral-200:#2a2720; --color-neutral-300:#3f3a30;
+  --color-neutral-400:#5c554a; --color-neutral-500:#7a7264; --color-neutral-600:#a29a8b;
+  --color-neutral-700:#c7bfae; --color-neutral-800:#e2dbca; --color-neutral-900:#f0ebdd;
+  --color-accent:#8a6d12; --color-accent-300:#6b5410; --color-accent-400:#a8871f;
+  background:var(--color-bg); color:var(--color-text);
+}
+.light-band .btn-ghost{color:#17150f}
+.light-band .tag-outline{border-color:rgba(23,21,15,.28);color:#3f3a30}
+
+/* hover states lifted from inline style-hover */
+.hv-home-1:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
+.hv-home-2:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
+.hv-home-3:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
+.hv-home-4:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
+.hv-home-5:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
+.hv-home-6:hover{background:rgba(212,175,55,.07)}
+.hv-home-7:hover{background:rgba(212,175,55,.07)}
+.hv-home-8:hover{background:rgba(212,175,55,.07)}
+.hv-home-9:hover{background:rgba(212,175,55,.07)}
+.hv-home-10:hover{background:rgba(212,175,55,.07)}
+.hv-home-11:hover{background:rgba(212,175,55,.07)}
