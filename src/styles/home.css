@@ -22,3 +22,59 @@
 .hv-home-9:hover{background:rgba(212,175,55,.07)}
 .hv-home-10:hover{background:rgba(212,175,55,.07)}
 .hv-home-11:hover{background:rgba(212,175,55,.07)}
+
+/* Hero atmosphere: the photograph is a still, so the movement is painted over
+   it. Each layer is a field of small blue puffs tiled edge to edge and scrolled
+   by exactly one tile width, so the loop is seamless and something is always
+   crossing the sky. Four speeds, nearest layer fastest. */
+.hero-sky{position:absolute;left:-10%;right:-10%;top:-12%;height:84%;pointer-events:none;overflow:hidden}
+.cloud{position:absolute;inset:-10% 0;mix-blend-mode:screen;will-change:background-position;background-repeat:repeat}
+
+.cloud-a{
+  background-image:
+    radial-gradient(9% 22% at 8% 30%,rgba(78,108,178,.62),transparent 70%),
+    radial-gradient(7% 17% at 26% 62%,rgba(58,86,150,.5),transparent 72%),
+    radial-gradient(11% 20% at 45% 22%,rgba(68,96,164,.55),transparent 70%),
+    radial-gradient(6% 15% at 61% 54%,rgba(84,116,190,.45),transparent 74%),
+    radial-gradient(10% 24% at 78% 36%,rgba(60,90,156,.58),transparent 70%),
+    radial-gradient(7% 16% at 93% 66%,rgba(74,104,172,.42),transparent 72%);
+  background-size:780px 100%;filter:blur(22px);animation:scroll-a 26s linear infinite}
+@keyframes scroll-a{to{background-position:780px 0}}
+
+.cloud-b{
+  background-image:
+    radial-gradient(13% 26% at 14% 52%,rgba(46,72,132,.55),transparent 68%),
+    radial-gradient(9% 19% at 37% 26%,rgba(62,90,158,.44),transparent 72%),
+    radial-gradient(15% 28% at 58% 64%,rgba(40,64,120,.5),transparent 68%),
+    radial-gradient(10% 21% at 82% 30%,rgba(56,84,148,.46),transparent 70%);
+  background-size:1040px 100%;filter:blur(34px);animation:scroll-b 41s linear infinite}
+@keyframes scroll-b{to{background-position:1040px 0}}
+
+.cloud-c{
+  background-image:
+    radial-gradient(22% 34% at 20% 38%,rgba(34,54,104,.58),transparent 66%),
+    radial-gradient(18% 30% at 64% 58%,rgba(28,46,92,.52),transparent 68%),
+    radial-gradient(14% 26% at 90% 24%,rgba(38,60,114,.44),transparent 70%);
+  background-size:1420px 100%;filter:blur(52px);animation:scroll-c 68s linear infinite}
+@keyframes scroll-c{to{background-position:1420px 0}}
+
+/* Highest, thinnest wisps — fastest, so there is always quick movement. */
+.cloud-d{
+  background-image:
+    radial-gradient(5% 9% at 11% 18%,rgba(126,158,224,.4),transparent 76%),
+    radial-gradient(4% 7% at 33% 40%,rgba(112,146,214,.32),transparent 78%),
+    radial-gradient(6% 10% at 52% 14%,rgba(134,164,230,.36),transparent 76%),
+    radial-gradient(4% 8% at 71% 44%,rgba(108,142,210,.3),transparent 78%),
+    radial-gradient(5% 9% at 88% 20%,rgba(122,154,220,.34),transparent 76%);
+  background-size:560px 100%;filter:blur(13px);animation:scroll-d 17s linear infinite}
+@keyframes scroll-d{to{background-position:560px 0}}
+
+/* A continuous band of light travelling along the skyline, no pause. */
+.hero-sweep{position:absolute;left:-60%;right:-60%;top:16%;height:58%;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(100deg,transparent 44%,rgba(212,175,55,.13) 50%,rgba(150,180,240,.17) 53%,transparent 60%);
+  filter:blur(30px);animation:sweep 15s linear infinite;will-change:transform}
+@keyframes sweep{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(50%,0,0)}}
+
+@keyframes heroDrift{from{transform:scale(1.04)}to{transform:scale(1.13) translate3d(-1.6%,-1%,0)}}
+.hero-photo{animation:heroDrift 30s ease-in-out infinite alternate;will-change:transform}
+@media (prefers-reduced-motion:reduce){.cloud,.hero-photo,.hero-sweep{animation:none}}

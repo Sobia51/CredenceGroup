@@ -14,7 +14,7 @@ export default function DepositClaims({ refundDays: refundDaysProp = 30, startIn
     <>
 <div style={{ background: "var(--color-bg)" }}>
 
-<header style={{ position: "sticky", top: "0", zIndex: "50", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(9,12,20,.8)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
+<header className="site-hd" style={{ position: "relative", zIndex: "50", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(9,12,20,.8)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
   <A href="/" style={{ display: "flex", alignItems: "baseline", gap: "10px", color: "var(--color-text)" }}>
     <span style={{ fontFamily: "var(--font-heading)", fontSize: "17px", fontWeight: "500", letterSpacing: ".14em", color: "var(--color-accent)" }}>CREDENCE</span>
     <span style={{ fontSize: "10px", letterSpacing: ".24em", color: "var(--color-neutral-400)", textTransform: "uppercase" }}>Deposit claims</span>

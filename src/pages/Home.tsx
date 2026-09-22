@@ -8,12 +8,12 @@ export default function Home() {
     <>
 <div style={{ background: "var(--color-bg)" }}>
 
-<header style={{ position: "sticky", top: "0", zIndex: "50", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(9,12,20,.8)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
+<header className="site-hd" style={{ position: "relative", zIndex: "50", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(9,12,20,.8)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
   <A href="#top" style={{ display: "flex", alignItems: "baseline", gap: "10px", color: "var(--color-text)" }}>
     <span style={{ fontFamily: "var(--font-heading)", fontSize: "17px", fontWeight: "500", letterSpacing: ".14em", color: "var(--color-accent)" }}>CREDENCE</span>
     <span style={{ fontSize: "10px", letterSpacing: ".24em", color: "var(--color-neutral-400)", textTransform: "uppercase" }}>Group · UAE</span>
   </A>
-  <nav style={{ display: "flex", gap: "26px", fontSize: "12.5px", letterSpacing: ".04em", color: "var(--color-neutral-300)" }}>
+  <nav className="site-nav" style={{ display: "flex", gap: "26px", fontSize: "12.5px", letterSpacing: ".04em", color: "var(--color-neutral-300)" }}>
     <A href="#who">Who we are</A>
     <A href="#operate">Services</A>
     <A href="#facilities">Facilities</A>
@@ -28,7 +28,14 @@ export default function Home() {
 
 <section id="top" style={{ position: "relative" }}>
   <div className="pin">
-    <img src="https://royal-uae-portals.lovable.app/assets/hero-dubai-Dx3vmr_1.jpg" alt="Dubai skyline at night with the Burj Khalifa" />
+    <img className="hero-photo" src="https://royal-uae-portals.lovable.app/assets/hero-dubai-Dx3vmr_1.jpg" alt="Dubai skyline at night with the Burj Khalifa" />
+<div className="hero-sky" aria-hidden="true">
+  <div className="cloud cloud-c"></div>
+  <div className="cloud cloud-b"></div>
+  <div className="cloud cloud-a"></div>
+  <div className="cloud cloud-d"></div>
+  <div className="hero-sweep"></div>
+</div>
     <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(9,12,20,.58) 0%,rgba(9,12,20,.28) 38%,rgba(9,12,20,.88) 100%)" }}></div>
   </div>
   <div className="over" style={{ minHeight: "100vh", display: "flex", alignItems: "flex-end", padding: "96px 40px 88px", boxSizing: "border-box" }}>
@@ -267,7 +274,7 @@ export default function Home() {
   </div>
   <div className="over" style={{ padding: "20px 40px 120px", boxSizing: "border-box" }}>
     <div style={{ maxWidth: "1280px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0,.85fr) minmax(0,1.15fr)", gap: "72px", alignItems: "start" }}>
-      <div style={{ position: "sticky", top: "96px" }}>
+      <div style={{ position: "sticky", top: "32px" }}>
         <div style={{ fontSize: "11px", letterSpacing: ".22em", textTransform: "uppercase", color: "var(--color-accent-300)", marginBottom: "20px" }}>Facilities management</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: "500", fontSize: "clamp(30px,3.2vw,46px)", lineHeight: "1.06", letterSpacing: "-.02em", margin: "0 0 22px" }}>Maintenance and cleaning delivered by 200+ skilled professionals</h2>
         <p style={{ fontSize: "15.5px", lineHeight: "1.65", color: "var(--color-neutral-400)", margin: "0 0 32px" }}>Advanced tools and machines, trained teams and flexible schedules keeping commercial buildings safe, clean and efficient.</p>

@@ -26,3 +26,14 @@ a:hover{color:var(--color-accent)}
 .pin{position:sticky;top:0;height:100vh;overflow:hidden;z-index:0}
 .pin img{width:100%;height:100%;object-fit:cover;display:block}
 .over{position:relative;z-index:1;margin-top:-100vh}
+
+/* Header reflow: below 1080px the nav drops to its own full-width row so the
+   Contact button stays reachable; the link list wraps within that row. */
+.site-hd{flex-wrap:wrap;row-gap:10px}
+.site-nav{min-width:0;flex-wrap:wrap}
+@media (max-width:1080px){
+  .site-nav{order:3;flex-basis:100%;gap:16px;row-gap:8px;padding-bottom:4px}
+}
+@media (max-width:560px){
+  .site-hd{padding-left:20px;padding-right:20px}
+}
