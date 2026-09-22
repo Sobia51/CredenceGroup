@@ -45,7 +45,7 @@ jobs:
           local-dir: ./dist/
           # Staging subdomain. Change to /public_html/credencegroup/ when the
           # new site takes over credence-group.ae.
-          server-dir: /new.credence-group.ae/
+          server-dir: ./
           # Some Bluehost plans require explicit FTPS; uncomment if the step
           # times out on connect.
           # protocol: ftps
