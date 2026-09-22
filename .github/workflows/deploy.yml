@@ -1,0 +1,52 @@
+# Builds the site and uploads it to Bluehost over FTP on every push to main.
+#
+# Setup, once:
+#   1. cPanel → FTP Accounts → note the hostname, username and password.
+#   2. GitHub → Settings → Secrets and variables → Actions → add three secrets:
+#        FTP_SERVER     e.g. ftp.credencegroup.ae
+#        FTP_USERNAME   the full FTP username, often user@yourdomain.com
+#        FTP_PASSWORD
+#
+# If the site should live in a subfolder rather than the domain root, change
+# server-dir, e.g. /public_html/staging/
+
+name: Deploy to Bluehost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist/ to public_html
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          # Staging subdomain. Change to /public_html/credencegroup/ when the
+          # new site takes over credence-group.ae.
+          server-dir: /new.credence-group.ae/
+          # Some Bluehost plans require explicit FTPS; uncomment if the step
+          # times out on connect.
+          # protocol: ftps
+          dangerous-clean-slate: false

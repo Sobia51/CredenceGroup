@@ -1,9 +1,17 @@
+# Builds the site and attaches it as a downloadable zip.
+# Nothing needs to be installed locally.
+#
+# Actions tab → "Build site" → Run workflow → open the run → download the
+# "credence-site" artifact at the bottom. Unzip it and upload its CONTENTS
+# into public_html on Bluehost.
+
 name: Build site
 
+# Manual only — deploy.yml handles pushes, so leaving a push trigger here would
+# run the same build twice on every commit. Use this when you want the zip by
+# hand rather than an FTP deploy.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
   build:
@@ -18,6 +26,7 @@ jobs:
         with:
           node-version: '20'
 
+      # npm install, not npm ci — no package-lock.json is committed yet.
       - name: Install dependencies
         run: npm install
 
@@ -29,5 +38,5 @@ jobs:
         with:
           name: credence-site
           path: dist/
-          include-hidden-files: true
+          include-hidden-files: true # .htaccess starts with a dot
           retention-days: 30

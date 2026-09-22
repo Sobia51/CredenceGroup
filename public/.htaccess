@@ -1,14 +1,24 @@
+# Apache config for the built site. Vite copies everything in public/ into
+# dist/, so this file ships with the build and lands in public_html/.
+
+# Single-page-app routing: /accommodation and /deposit-claims are handled by
+# react-router in the browser, not by real folders on disk. Without this,
+# Apache returns 404 for a direct visit or a refresh on those URLs.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
+  # Leave real files and directories alone (assets, dubai-map.html, images).
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
+  # Everything else falls through to the app.
   RewriteRule . /index.html [L]
 </IfModule>
 
+# Vite fingerprints asset filenames, so they can be cached indefinitely.
+# index.html must not be, or visitors keep getting the previous deploy.
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/css "access plus 1 year"
