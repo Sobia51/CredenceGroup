@@ -1,34 +1,35 @@
-.ghost-num{position:absolute;right:-6px;bottom:-30px;font-family:var(--font-heading);font-size:150px;font-weight:500;line-height:1;color:rgba(212,175,55,.055);pointer-events:none;letter-spacing:-.05em}
+.ghost-num{position:absolute;right:-6px;bottom:-30px;font-family:var(--font-heading);font-size:150px;font-weight:500;line-height:1;color:rgba(209,168,90,.055);pointer-events:none;letter-spacing:-.05em}
 .light-band{
   --color-bg:#f7f4ec; --color-surface:#fffdf7; --color-text:#17150f;
   --color-neutral-100:#17150f; --color-neutral-200:#2a2720; --color-neutral-300:#3f3a30;
   --color-neutral-400:#5c554a; --color-neutral-500:#7a7264; --color-neutral-600:#a29a8b;
   --color-neutral-700:#c7bfae; --color-neutral-800:#e2dbca; --color-neutral-900:#f0ebdd;
-  --color-accent:#8a6d12; --color-accent-300:#6b5410; --color-accent-400:#a8871f;
+  --color-accent:#86662a; --color-accent-300:#6a4f1c; --color-accent-400:#a9853f;
   background:var(--color-bg); color:var(--color-text);
 }
 .light-band .btn-ghost{color:#17150f}
 .light-band .tag-outline{border-color:rgba(23,21,15,.28);color:#3f3a30}
 
 /* hover states lifted from inline style-hover */
-.hv-home-1:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
-.hv-home-2:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
-.hv-home-3:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
-.hv-home-4:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
-.hv-home-5:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(212,175,55,.13),rgba(10,10,11,0) 62%)}
-.hv-home-6:hover{background:rgba(212,175,55,.07)}
-.hv-home-7:hover{background:rgba(212,175,55,.07)}
-.hv-home-8:hover{background:rgba(212,175,55,.07)}
-.hv-home-9:hover{background:rgba(212,175,55,.07)}
-.hv-home-10:hover{background:rgba(212,175,55,.07)}
-.hv-home-11:hover{background:rgba(212,175,55,.07)}
+.hv-home-1:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(209,168,90,.13),rgba(10,10,11,0) 62%)}
+.hv-home-2:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(209,168,90,.13),rgba(10,10,11,0) 62%)}
+.hv-home-3:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(209,168,90,.13),rgba(10,10,11,0) 62%)}
+.hv-home-4:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(209,168,90,.13),rgba(10,10,11,0) 62%)}
+.hv-home-5:hover{border-color:var(--color-accent);transform:translateY(-4px);background:linear-gradient(160deg,rgba(209,168,90,.13),rgba(10,10,11,0) 62%)}
+.hv-home-6:hover{background:rgba(209,168,90,.07)}
+.hv-home-7:hover{background:rgba(209,168,90,.07)}
+.hv-home-8:hover{background:rgba(209,168,90,.07)}
+.hv-home-9:hover{background:rgba(209,168,90,.07)}
+.hv-home-10:hover{background:rgba(209,168,90,.07)}
+.hv-home-11:hover{background:rgba(209,168,90,.07)}
 
 /* Hero atmosphere: the photograph is a still, so the movement is painted over
    it. Each layer is a field of small blue puffs tiled edge to edge and scrolled
    by exactly one tile width, so the loop is seamless and something is always
    crossing the sky. Four speeds, nearest layer fastest. */
 .hero-sky{position:absolute;left:-10%;right:-10%;top:-12%;height:84%;pointer-events:none;overflow:hidden}
-.cloud{position:absolute;inset:-10% 0;mix-blend-mode:screen;will-change:background-position;background-repeat:repeat}
+.cloud{position:absolute;top:-10%;bottom:-10%;left:calc(var(--tile) * -1);width:calc(100% + var(--tile));mix-blend-mode:screen;background-repeat:repeat;will-change:transform;backface-visibility:hidden;animation:drift var(--dur) linear infinite}
+@keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(var(--tile),0,0)}}
 
 .cloud-a{
   background-image:
@@ -38,8 +39,7 @@
     radial-gradient(6% 15% at 61% 54%,rgba(84,116,190,.45),transparent 74%),
     radial-gradient(10% 24% at 78% 36%,rgba(60,90,156,.58),transparent 70%),
     radial-gradient(7% 16% at 93% 66%,rgba(74,104,172,.42),transparent 72%);
-  background-size:780px 100%;filter:blur(22px);animation:scroll-a 26s linear infinite}
-@keyframes scroll-a{to{background-position:780px 0}}
+  background-size:780px 100%;filter:blur(22px);--tile:780px;--dur:26s}
 
 .cloud-b{
   background-image:
@@ -47,16 +47,14 @@
     radial-gradient(9% 19% at 37% 26%,rgba(62,90,158,.44),transparent 72%),
     radial-gradient(15% 28% at 58% 64%,rgba(40,64,120,.5),transparent 68%),
     radial-gradient(10% 21% at 82% 30%,rgba(56,84,148,.46),transparent 70%);
-  background-size:1040px 100%;filter:blur(34px);animation:scroll-b 41s linear infinite}
-@keyframes scroll-b{to{background-position:1040px 0}}
+  background-size:1040px 100%;filter:blur(34px);--tile:1040px;--dur:41s}
 
 .cloud-c{
   background-image:
     radial-gradient(22% 34% at 20% 38%,rgba(34,54,104,.58),transparent 66%),
     radial-gradient(18% 30% at 64% 58%,rgba(28,46,92,.52),transparent 68%),
     radial-gradient(14% 26% at 90% 24%,rgba(38,60,114,.44),transparent 70%);
-  background-size:1420px 100%;filter:blur(52px);animation:scroll-c 68s linear infinite}
-@keyframes scroll-c{to{background-position:1420px 0}}
+  background-size:1420px 100%;filter:blur(52px);--tile:1420px;--dur:68s}
 
 /* Highest, thinnest wisps — fastest, so there is always quick movement. */
 .cloud-d{
@@ -66,15 +64,35 @@
     radial-gradient(6% 10% at 52% 14%,rgba(134,164,230,.36),transparent 76%),
     radial-gradient(4% 8% at 71% 44%,rgba(108,142,210,.3),transparent 78%),
     radial-gradient(5% 9% at 88% 20%,rgba(122,154,220,.34),transparent 76%);
-  background-size:560px 100%;filter:blur(13px);animation:scroll-d 17s linear infinite}
-@keyframes scroll-d{to{background-position:560px 0}}
+  background-size:560px 100%;filter:blur(13px);--tile:560px;--dur:17s}
 
 /* A continuous band of light travelling along the skyline, no pause. */
 .hero-sweep{position:absolute;left:-60%;right:-60%;top:16%;height:58%;pointer-events:none;mix-blend-mode:screen;
-  background:linear-gradient(100deg,transparent 44%,rgba(212,175,55,.13) 50%,rgba(150,180,240,.17) 53%,transparent 60%);
+  background:linear-gradient(100deg,transparent 44%,rgba(209,168,90,.13) 50%,rgba(150,180,240,.17) 53%,transparent 60%);
   filter:blur(30px);animation:sweep 15s linear infinite;will-change:transform}
 @keyframes sweep{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(50%,0,0)}}
 
 @keyframes heroDrift{from{transform:scale(1.04)}to{transform:scale(1.13) translate3d(-1.6%,-1%,0)}}
 .hero-photo{animation:heroDrift 30s ease-in-out infinite alternate;will-change:transform}
 @media (prefers-reduced-motion:reduce){.cloud,.hero-photo,.hero-sweep{animation:none}}
+
+/* Pause the hero loops while the hero is off screen (class set in Home.tsx). */
+.hero-off .cloud,.hero-off .hero-sweep,.hero-off .hero-photo{animation-play-state:paused}
+/* Small screens: drop the two heaviest blur layers. */
+@media (max-width:760px){.cloud-b,.cloud-c{display:none}}
+
+/* ---------- Hero directions ---------- */
+.hero-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:80px;position:relative}
+.hero-stats::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,rgba(209,168,90,.45),rgba(209,168,90,.12) 70%,transparent)}
+.hero-stat{padding:26px 24px 36px 0}
+.hero-stat + .hero-stat{padding-left:24px;border-left:1px solid rgba(209,168,90,.12)}
+@media (max-width:760px){.hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:56px}.hero-stat:nth-child(3){padding-left:0;border-left:0}}
+.scroll-cue{position:absolute;right:40px;bottom:40px;display:flex;flex-direction:column;align-items:center;gap:12px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--color-neutral-400)}
+.scroll-cue span{writing-mode:vertical-rl}
+.scroll-cue i{display:block;width:1px;height:56px;background:linear-gradient(180deg,rgba(209,168,90,.8),transparent);transform-origin:top;animation:cue 2.4s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+@media (max-width:760px){.scroll-cue{display:none}}
+
+/* Company cards: gold hairline draws across the top on hover. */
+#companies a[class*="hv-home-"]::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--color-accent),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+#companies a[class*="hv-home-"]:hover::before{transform:scaleX(1)}

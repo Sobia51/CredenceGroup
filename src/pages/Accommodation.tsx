@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import A from '../components/A';
 import { sx } from '../lib/sx';
 import { useAccommodation } from '../hooks/useAccommodation';
@@ -7,35 +7,37 @@ import '../styles/accommodation.css';
 
 export default function Accommodation({ defaultView = 'map', showSectorSwitcher = true }) {
   const {
-    area, cap, clearFilters, closeQuote, clusters, extras, extrasLabel, isGrid, isMap, monthly, onArea, onCap, onQLocation, onRoom, onTerm, onType, onWorkers, openQuote, qLocation, quoteNote, quoteOpen, resultCount, room, rooms, roomsNeeded, sectorNote, sectors, selected, showGrid, showMap, sitesMatching, submitLabel, submitQuote, suggestedConfig, tabGrid, tabMap, term, type, workers, workersLabel
+    quoteSending, quoteError, area, cap, clearFilters, closeQuote, clusters, extras, extrasLabel, isGrid, isMap, monthly, onArea, onCap, onQLocation, onRoom, onTerm, onType, onWorkers, openQuote, qLocation, quoteNote, quoteOpen, resultCount, room, rooms, roomsNeeded, sectorNote, sectors, selected, showGrid, showMap, sitesMatching, submitLabel, submitQuote, suggestedConfig, tabGrid, tabMap, term, type, workers, workersLabel
   } = useAccommodation({ defaultView, showSectorSwitcher });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
 <div style={{ background: "var(--color-bg)" }}>
 
-<header className="site-hd" style={{ position: "relative", zIndex: "60", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(9,12,20,.82)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
+<header className="site-hd" style={{ position: "sticky", top: "0", zIndex: "60", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", padding: "14px 40px", background: "rgba(6,10,22,.82)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(209,168,90,.16)" }}>
   <A href="/" style={{ display: "flex", alignItems: "baseline", gap: "10px", color: "var(--color-text)" }}>
     <span style={{ fontFamily: "var(--font-heading)", fontSize: "17px", fontWeight: "500", letterSpacing: ".14em", color: "var(--color-accent)" }}>CREDENCE</span>
     <span style={{ fontSize: "10px", letterSpacing: ".24em", color: "var(--color-neutral-400)", textTransform: "uppercase" }}>Workforce accommodation</span>
   </A>
-  <nav className="site-nav" style={{ display: "flex", gap: "24px", fontSize: "12.5px", letterSpacing: ".04em", color: "var(--color-neutral-300)" }}>
+  <nav className={menuOpen ? "site-nav open" : "site-nav"} onClick={() => setMenuOpen(false)} style={{ display: "flex", gap: "24px", fontSize: "12.5px", letterSpacing: ".04em", color: "var(--color-neutral-300)" }}>
     <A href="#portfolio">Portfolio</A>
     <A href="#detail">Facility detail</A>
+    <A href="/deposit-claims">Deposit claim</A>
     <A href="/">Group site</A>
-    <A href="/deposit-claims">Deposit claims</A>
   </nav>
   <div style={{ display: "flex", gap: "8px" }}>
     <A className="btn btn-ghost" href="tel:+97145756773" style={{ fontSize: "12.5px" }}>Call</A>
     <button className="btn btn-primary" type="button" style={{ fontSize: "12.5px" }} onClick={openQuote}>Request quote</button>
+    <button className="btn btn-ghost nav-toggle" type="button" aria-expanded={menuOpen} aria-label="Menu" onClick={() => setMenuOpen((o) => !o)} style={{ fontSize: "12.5px" }}>{menuOpen ? "Close" : "Menu"}</button>
   </div>
 </header>
 
 <section style={{ position: "relative" }}>
   <div className="pin">
     <img src="/assets/lounge-night.jpg" alt="Accommodation block at dusk in Dubai" style={{ objectPosition: "center 45%" }} />
-    <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(9,12,20,.78) 0%,rgba(9,12,20,.42) 38%,rgba(9,12,20,.89) 100%)" }}></div>
-    <div style={{ position: "absolute", inset: "0", background: "linear-gradient(90deg,rgba(9,12,20,.87) 0%,rgba(9,12,20,.55) 50%,rgba(9,12,20,.12) 100%)" }}></div>
+    <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(6,10,22,.78) 0%,rgba(6,10,22,.42) 38%,rgba(6,10,22,.89) 100%)" }}></div>
+    <div style={{ position: "absolute", inset: "0", background: "linear-gradient(90deg,rgba(6,10,22,.87) 0%,rgba(6,10,22,.55) 50%,rgba(6,10,22,.12) 100%)" }}></div>
   </div>
   <div className="over" style={{ minHeight: "124vh", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 40px 72px", boxSizing: "border-box" }}>
     <div style={{ maxWidth: "1080px" }}>
@@ -69,13 +71,13 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
         </div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: "500", fontSize: "clamp(28px,3.2vw,46px)", lineHeight: "1.05", letterSpacing: "-.02em", margin: "0" }}>Where our camps are</h2>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", border: "1px solid rgba(212,175,55,.28)", borderRadius: "999px", padding: "4px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", border: "1px solid rgba(209,168,90,.28)", borderRadius: "999px", padding: "4px" }}>
         <button type="button" onClick={showMap} style={sx(tabMap)}>Map view</button>
         <button type="button" onClick={showGrid} style={sx(tabGrid)}>Grid view</button>
       </div>
     </div>
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: "18px", borderTop: "1px solid rgba(212,175,55,.2)", borderBottom: "1px solid rgba(212,175,55,.2)", padding: "22px 0", marginBottom: "36px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: "18px", borderTop: "1px solid rgba(209,168,90,.2)", borderBottom: "1px solid rgba(209,168,90,.2)", padding: "22px 0", marginBottom: "36px" }}>
       <div className="field" style={{ margin: "0" }}><label htmlFor="f-area">Location area</label>
         <select className="input" id="f-area" value={area} onChange={onArea}>
           <option>All areas</option>
@@ -120,12 +122,12 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
     </div>
 
     {(isMap) ? (<>
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.55fr) minmax(0,1fr)", gap: "22px", alignItems: "stretch" }}>
-      <div style={{ position: "relative", border: "1px solid rgba(212,175,55,.24)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#0c1120", minHeight: "560px" }}>
+    <div className="rg-2" style={{ display: "grid", gridTemplateColumns: "minmax(0,1.55fr) minmax(0,1fr)", gap: "22px", alignItems: "stretch" }}>
+      <div style={{ position: "relative", border: "1px solid rgba(209,168,90,.24)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#0a1022", minHeight: "560px" }}>
         <iframe src="/dubai-map.html" title="Credence camp locations across Dubai" style={{ position: "absolute", inset: "0", width: "100%", height: "100%", border: "0" }}></iframe>
-        <div style={{ position: "absolute", left: "16px", top: "16px", zIndex: "5", pointerEvents: "none", fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "var(--color-neutral-400)", background: "rgba(9,12,20,.68)", padding: "7px 11px", border: "1px solid rgba(212,175,55,.22)", borderRadius: "6px" }}>Dubai industrial &amp; commercial hubs</div>
+        <div style={{ position: "absolute", left: "16px", top: "16px", zIndex: "5", pointerEvents: "none", fontSize: "10px", letterSpacing: ".22em", textTransform: "uppercase", color: "var(--color-neutral-400)", background: "rgba(6,10,22,.68)", padding: "7px 11px", border: "1px solid rgba(209,168,90,.22)", borderRadius: "6px" }}>Dubai industrial &amp; commercial hubs</div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", border: "1px solid rgba(212,175,55,.2)", borderRadius: "var(--radius-md,8px)", padding: "8px 20px 20px", maxHeight: "560px", overflow: "auto" }}>
+      <div style={{ display: "flex", flexDirection: "column", border: "1px solid rgba(209,168,90,.2)", borderRadius: "var(--radius-md,8px)", padding: "8px 20px 20px", maxHeight: "560px", overflow: "auto" }}>
         <div style={{ fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--color-neutral-500)", padding: "14px 0 6px" }}>Location clusters</div>
         {(clusters || []).map((c, $index) => (<Fragment key={$index}>
           <button type="button" onClick={c.onClick} onMouseEnter={c.onHover} style={sx(c.style)}>
@@ -146,10 +148,10 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
     {(isGrid) ? (<>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))", gap: "22px" }}>
       {(clusters || []).map((c, $index) => (<Fragment key={$index}>
-        <article style={{ border: "1px solid rgba(212,175,55,.2)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "var(--color-neutral-900)" }}>
-          <div style={{ height: "170px", overflow: "hidden", position: "relative", background: "#141a28" }}>
+        <article style={{ border: "1px solid rgba(209,168,90,.2)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "var(--color-neutral-900)" }}>
+          <div style={{ height: "170px", overflow: "hidden", position: "relative", background: "#10172a" }}>
             <div style={sx(c.photoStyle)}></div>
-            <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(9,12,20,.2),rgba(9,12,20,.79))" }}></div>
+            <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(6,10,22,.2),rgba(6,10,22,.79))" }}></div>
             <span style={{ position: "absolute", left: "16px", bottom: "14px", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-accent-300)" }}>{c.area}</span>
           </div>
           <div style={{ padding: "22px 22px 24px" }}>
@@ -159,7 +161,7 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
               <span className="tag tag-outline">{c.roomsLabel}</span>
               <span className="tag tag-accent">{c.bedsLabel}</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(212,175,55,.16)", paddingTop: "16px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(209,168,90,.16)", paddingTop: "16px" }}>
               <span className="num" style={{ fontSize: "13.5px", color: "var(--color-neutral-300)" }}>{c.capacityLabel} workers</span>
               <button className="btn btn-ghost" type="button" style={{ fontSize: "12.5px" }} onClick={c.onClick}>View facility</button>
             </div>
@@ -171,7 +173,7 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
   </div>
 </section>
 
-<section id="detail" style={{ position: "relative", zIndex: "2", background: "var(--color-section)", borderTop: "1px solid rgba(212,175,55,.2)", borderBottom: "1px solid rgba(212,175,55,.2)", padding: "100px 40px 110px" }}>
+<section id="detail" style={{ position: "relative", zIndex: "2", background: "var(--color-section)", borderTop: "1px solid rgba(209,168,90,.2)", borderBottom: "1px solid rgba(209,168,90,.2)", padding: "100px 40px 110px" }}>
   <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
     <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "32px", flexWrap: "wrap", marginBottom: "44px" }}>
       <div>
@@ -185,35 +187,35 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
       </div>
     </div>
 
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.6fr) minmax(0,1fr)", gap: "16px", marginBottom: "56px" }}>
-      <div style={{ position: "relative", border: "1px solid rgba(212,175,55,.22)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", height: "560px" }}>
+    <div className="rg-2" style={{ display: "grid", gridTemplateColumns: "minmax(0,1.6fr) minmax(0,1fr)", gap: "16px", marginBottom: "56px" }}>
+      <div style={{ position: "relative", border: "1px solid rgba(209,168,90,.22)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", height: "560px" }}>
         <div style={sx(selected.heroStyle)}></div>
-        <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(9,12,20,.15),rgba(9,12,20,.66))" }}></div>
-        <div style={{ position: "absolute", left: "22px", bottom: "22px", display: "flex", alignItems: "center", gap: "12px", border: "1px solid rgba(212,175,55,.5)", borderRadius: "999px", padding: "9px 16px", background: "rgba(9,12,20,.56)", backdropFilter: "blur(6px)" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--color-accent)", boxShadow: "0 0 0 4px rgba(212,175,55,.2)" }}></span>
+        <div style={{ position: "absolute", inset: "0", background: "linear-gradient(180deg,rgba(6,10,22,.15),rgba(6,10,22,.66))" }}></div>
+        <div style={{ position: "absolute", left: "22px", bottom: "22px", display: "flex", alignItems: "center", gap: "12px", border: "1px solid rgba(209,168,90,.5)", borderRadius: "999px", padding: "9px 16px", background: "rgba(6,10,22,.56)", backdropFilter: "blur(6px)" }}>
+          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--color-accent)", boxShadow: "0 0 0 4px rgba(209,168,90,.2)" }}></span>
           <span style={{ fontSize: "12px", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--color-accent-200)" }}>360° virtual tour · start walkthrough</span>
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateRows: "repeat(3,176px)", gap: "16px" }}>
-        <div style={{ position: "relative", border: "1px solid rgba(212,175,55,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#141a28" }}>
+        <div style={{ position: "relative", border: "1px solid rgba(209,168,90,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#10172a" }}>
           <div style={{ position: "absolute", inset: "0", backgroundImage: "url(https://royal-uae-portals.lovable.app/assets/prop-1-BvTtaELf.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: ".65" }}></div>
           <span style={{ position: "absolute", left: "14px", bottom: "12px", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-200)" }}>Room layouts</span>
         </div>
-        <div style={{ position: "relative", border: "1px solid rgba(212,175,55,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#141a28" }}>
+        <div style={{ position: "relative", border: "1px solid rgba(209,168,90,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#10172a" }}>
           <div style={{ position: "absolute", inset: "0", backgroundImage: "url(https://royal-uae-portals.lovable.app/assets/prop-3-eX8QR1wO.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: ".65" }}></div>
           <span style={{ position: "absolute", left: "14px", bottom: "12px", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-200)" }}>Dining hall &amp; kitchen</span>
         </div>
-        <div style={{ position: "relative", border: "1px solid rgba(212,175,55,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#141a28" }}>
+        <div style={{ position: "relative", border: "1px solid rgba(209,168,90,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden", background: "#10172a" }}>
           <div style={{ position: "absolute", inset: "0", backgroundImage: "url(https://royal-uae-portals.lovable.app/assets/prop-2-D57UhuvN.jpg)", backgroundSize: "cover", backgroundPosition: "center", opacity: ".65" }}></div>
           <span style={{ position: "absolute", left: "14px", bottom: "12px", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-200)" }}>Recreation &amp; washrooms</span>
         </div>
       </div>
     </div>
 
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.25fr)", gap: "64px", alignItems: "start" }}>
+    <div className="rg-2" style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.25fr)", gap: "64px", alignItems: "start" }}>
       <div>
         <div style={{ fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--color-neutral-500)", marginBottom: "24px" }}>Amenities &amp; compliance</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: "1px", background: "rgba(212,175,55,.16)", borderTop: "1px solid rgba(212,175,55,.16)", borderBottom: "1px solid rgba(212,175,55,.16)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: "1px", background: "rgba(209,168,90,.16)", borderTop: "1px solid rgba(209,168,90,.16)", borderBottom: "1px solid rgba(209,168,90,.16)" }}>
           <div style={{ background: "var(--color-section)", padding: "18px 16px", fontSize: "14px", display: "flex", gap: "10px" }}><span style={{ color: "var(--color-accent)" }}>✓</span>Central AC &amp; climate control</div>
           <div style={{ background: "var(--color-section)", padding: "18px 16px", fontSize: "14px", display: "flex", gap: "10px" }}><span style={{ color: "var(--color-accent)" }}>✓</span>24/7 security &amp; CCTV</div>
           <div style={{ background: "var(--color-section)", padding: "18px 16px", fontSize: "14px", display: "flex", gap: "10px" }}><span style={{ color: "var(--color-accent)" }}>✓</span>On-site catering &amp; kitchens</div>
@@ -251,7 +253,7 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
 </section>
 
 <section style={{ position: "relative", zIndex: "2", background: "var(--color-bg)", padding: "100px 40px 120px" }}>
-  <div style={{ maxWidth: "1280px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: "72px", alignItems: "center" }}>
+  <div className="rg-2" style={{ maxWidth: "1280px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: "72px", alignItems: "center" }}>
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
         <span style={{ width: "56px", height: "1px", background: "var(--color-accent)" }}></span>
@@ -264,7 +266,7 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
         <A className="btn btn-ghost" href="https://wa.me/97145756773">WhatsApp the desk</A>
       </div>
     </div>
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", background: "rgba(212,175,55,.18)", border: "1px solid rgba(212,175,55,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", background: "rgba(209,168,90,.18)", border: "1px solid rgba(209,168,90,.18)", borderRadius: "var(--radius-md,8px)", overflow: "hidden" }}>
       <div style={{ background: "var(--color-bg)", padding: "28px 24px" }}><div className="num" style={{ fontFamily: "var(--font-heading)", fontSize: "34px", fontWeight: "500", color: "var(--color-accent)", lineHeight: "1" }}>25</div><div style={{ fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-500)", marginTop: "8px" }}>Camp sites</div></div>
       <div style={{ background: "var(--color-bg)", padding: "28px 24px" }}><div className="num" style={{ fontFamily: "var(--font-heading)", fontSize: "34px", fontWeight: "500", color: "var(--color-accent)", lineHeight: "1" }}>3,350+</div><div style={{ fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-500)", marginTop: "8px" }}>Rooms</div></div>
       <div style={{ background: "var(--color-bg)", padding: "28px 24px" }}><div className="num" style={{ fontFamily: "var(--font-heading)", fontSize: "34px", fontWeight: "500", color: "var(--color-accent)", lineHeight: "1" }}>25,000+</div><div style={{ fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: "var(--color-neutral-500)", marginTop: "8px" }}>Individuals housed</div></div>
@@ -276,7 +278,7 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
 {(quoteOpen) ? (<>
 <div style={{ position: "fixed", inset: "0", zIndex: "90", display: "flex", justifyContent: "flex-end" }}>
   <div onClick={closeQuote} style={{ position: "absolute", inset: "0", background: "rgba(7,10,17,.74)", backdropFilter: "blur(3px)" }}></div>
-  <aside style={{ position: "relative", width: "min(520px,100%)", height: "100%", overflow: "auto", background: "#0c1120", borderLeft: "1px solid rgba(212,175,55,.32)", padding: "32px 34px 44px", boxSizing: "border-box", boxShadow: "-30px 0 80px rgba(0,0,0,.6)" }}>
+  <aside style={{ position: "relative", width: "min(520px,100%)", height: "100%", overflow: "auto", background: "#0a1022", borderLeft: "1px solid rgba(209,168,90,.32)", padding: "32px 34px 44px", boxSizing: "border-box", boxShadow: "-30px 0 80px rgba(0,0,0,.6)" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "20px", marginBottom: "28px" }}>
       <div>
         <div style={{ fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--color-accent-300)", marginBottom: "12px" }}>Capacity calculator</div>
@@ -319,14 +321,14 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
       </Fragment>))}
     </div>
 
-    <div style={{ border: "1px solid rgba(212,175,55,.32)", borderRadius: "var(--radius-md,8px)", padding: "24px", background: "rgba(212,175,55,.05)", marginBottom: "24px" }}>
+    <div style={{ border: "1px solid rgba(209,168,90,.32)", borderRadius: "var(--radius-md,8px)", padding: "24px", background: "rgba(209,168,90,.05)", marginBottom: "24px" }}>
       <div style={{ fontSize: "10.5px", letterSpacing: ".2em", textTransform: "uppercase", color: "var(--color-accent-300)", marginBottom: "18px" }}>Indicative estimate</div>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}><span style={{ color: "var(--color-neutral-400)" }}>Rooms required</span><span className="num">{roomsNeeded}</span></div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}><span style={{ color: "var(--color-neutral-400)" }}>Suggested configuration</span><span className="num">{suggestedConfig}</span></div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}><span style={{ color: "var(--color-neutral-400)" }}>Sites matching</span><span className="num">{sitesMatching}</span></div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}><span style={{ color: "var(--color-neutral-400)" }}>Services included</span><span className="num">{extrasLabel}</span></div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "1px solid rgba(212,175,55,.24)", paddingTop: "14px", marginTop: "4px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "1px solid rgba(209,168,90,.24)", paddingTop: "14px", marginTop: "4px" }}>
           <span style={{ fontSize: "13px", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--color-neutral-400)" }}>Indicative monthly</span>
           <span className="num" style={{ fontFamily: "var(--font-heading)", fontSize: "26px", color: "var(--color-accent)" }}>{monthly}</span>
         </div>
@@ -334,10 +336,11 @@ export default function Accommodation({ defaultView = 'map', showSectorSwitcher 
       <p style={{ fontSize: "11.5px", lineHeight: "1.55", color: "var(--color-neutral-500)", margin: "16px 0 0" }}>Indicative only, based on published bed rates. A dedicated account manager confirms pricing after a site walkthrough.</p>
     </div>
 
-    <div className="field" style={{ marginBottom: "14px" }}><label htmlFor="q-company">Company</label><input className="input" id="q-company" placeholder="Your company name" /></div>
-    <div className="field" style={{ marginBottom: "20px" }}><label htmlFor="q-email">Work email</label><input className="input" id="q-email" placeholder="you@company.ae" /></div>
-    <button className="btn btn-primary btn-block" type="button" onClick={submitQuote}>{submitLabel}</button>
-    <div style={{ fontSize: "12.5px", color: "var(--color-accent-300)", minHeight: "20px", marginTop: "12px" }}>{quoteNote}</div>
+    <div className="field" style={{ marginBottom: "14px" }}><label htmlFor="q-company">Company</label><input className="input" id="q-company" name="company" autoComplete="organization" placeholder="Your company name" /></div>
+    <div className="field" style={{ marginBottom: "20px" }}><label htmlFor="q-email">Work email</label><input className="input" id="q-email" name="email" type="email" autoComplete="email" placeholder="you@company.ae" /></div>
+    <div className="field" style={{ marginBottom: "20px" }}><label htmlFor="q-phone">Phone (optional)</label><input className="input" id="q-phone" name="phone" type="tel" autoComplete="tel" placeholder="+971 5x xxx xxxx" /></div>
+    <button className="btn btn-primary btn-block" type="button" onClick={submitQuote} disabled={quoteSending}>{submitLabel}</button>
+    <div role="status" style={{ fontSize: "12.5px", lineHeight: "1.5", color: quoteError ? "#f0a39a" : "var(--color-accent-300)", minHeight: "20px", marginTop: "12px" }}>{quoteNote}</div>
   </aside>
 </div>
 </>) : null}

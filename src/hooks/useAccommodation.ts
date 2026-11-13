@@ -34,7 +34,7 @@ const pill = (active: boolean) =>
   'padding:9px 16px;border-radius:999px;cursor:pointer;font-family:var(--font-body);font-size:12.5px;letter-spacing:.04em;transition:all .15s;' +
   (active
     ? 'background:var(--color-accent);color:#0b0e17;border:1px solid var(--color-accent)'
-    : 'background:transparent;color:var(--color-neutral-300);border:1px solid rgba(212,175,55,.3)');
+    : 'background:transparent;color:var(--color-neutral-300);border:1px solid rgba(209,168,90,.3)');
 
 const tab = (active: boolean) =>
   'padding:7px 16px;border-radius:999px;border:0;cursor:pointer;font-family:var(--font-body);font-size:12.5px;letter-spacing:.04em;' +
@@ -69,6 +69,8 @@ export function useAccommodation({ defaultView = 'map', showSectorSwitcher = tru
   const [extraList, setExtraList] = useState<string[]>(['Catering']);
   const [quoteNote, setQuoteNote] = useState('');
   const [sent, setSent] = useState(false);
+  const [quoteSending, setQuoteSending] = useState(false);
+  const [quoteError, setQuoteError] = useState(false);
 
   const list = useMemo(() => matches(filters), [filters]);
 
@@ -127,8 +129,8 @@ export function useAccommodation({ defaultView = 'map', showSectorSwitcher = tru
     { name: 'Supervisor suite', area: '26 m²', bedCount: 2, count: 38, note: 'Twin room with desk, en-suite and separate entry.' }
   ].map((r) => ({
     ...r,
-    style: 'border:1px solid rgba(212,175,55,.22);border-radius:var(--radius-md,8px);padding:22px 20px 24px;background:rgba(9,12,20,.5)',
-    beds: Array.from({ length: r.bedCount }, () => ({ style: 'width:16px;height:11px;border-radius:2px;background:rgba(212,175,55,.55)' }))
+    style: 'border:1px solid rgba(209,168,90,.22);border-radius:var(--radius-md,8px);padding:22px 20px 24px;background:rgba(6,10,22,.5)',
+    beds: Array.from({ length: r.bedCount }, () => ({ style: 'width:16px;height:11px;border-radius:2px;background:rgba(209,168,90,.55)' }))
   }));
 
   const workerCount = Number(workers) || 500;
@@ -171,8 +173,8 @@ export function useAccommodation({ defaultView = 'map', showSectorSwitcher = tru
       ...decorate(x),
       style:
         'text-align:left;width:100%;background:' +
-        (x.id === selectedId ? 'rgba(212,175,55,.1)' : 'transparent') +
-        ';border:0;border-top:1px solid rgba(212,175,55,.14);padding:16px 4px;cursor:pointer;color:var(--color-text);font-family:var(--font-body)'
+        (x.id === selectedId ? 'rgba(209,168,90,.1)' : 'transparent') +
+        ';border:0;border-top:1px solid rgba(209,168,90,.14);padding:16px 4px;cursor:pointer;color:var(--color-text);font-family:var(--font-body)'
     })),
     selected: decorate(sel),
     rooms,
@@ -181,6 +183,7 @@ export function useAccommodation({ defaultView = 'map', showSectorSwitcher = tru
     openQuote: () => {
       setQuoteOpen(true);
       setQuoteNote('');
+      setQuoteError(false);
       setSent(false);
     },
     closeQuote: () => setQuoteOpen(false),
@@ -201,12 +204,43 @@ export function useAccommodation({ defaultView = 'map', showSectorSwitcher = tru
     sitesMatching: sitesMatching + ' of ' + SITES.length,
     extrasLabel: extraList.length ? extraList.join(', ') : 'Accommodation only',
     monthly: 'AED ' + fmt(monthly),
-    submitLabel: sent ? 'Request received' : 'Send to an account manager',
+    submitLabel: quoteSending ? 'Sending…' : sent ? 'Request received' : 'Send to an account manager',
     quoteNote,
-    // TODO: POST to the enquiries endpoint once the API exists.
-    submitQuote: () => {
-      setSent(true);
-      setQuoteNote('Received. An account manager will confirm pricing within 24 hours on +971 4 575 6773.');
+    quoteSending,
+    quoteError,
+    // Posts to public/contact.php, which emails info@credence-group.ae.
+    submitQuote: async () => {
+      if (sent || quoteSending) return;
+      const val = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value.trim() || '';
+      const company = val('q-company'), email = val('q-email'), phone = val('q-phone');
+      const fail = (msg: string) => { setQuoteError(true); setQuoteNote(msg); };
+      if (!company) return fail('Please enter your company name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Please enter a valid work email.');
+      const details = [
+        'Workers / beds: ' + fmt(workerCount) + (workerCount >= 5000 ? '+' : ''),
+        'Preferred location: ' + qLocation,
+        'Contract: ' + term,
+        'Services: ' + (extraList.length ? extraList.join(', ') : 'Accommodation only'),
+        'Rooms required: ' + fmt(roomsNeeded) + ' (' + perRoom + '-bed)',
+        'Indicative monthly: AED ' + fmt(monthly)
+      ].join('\n');
+      const fd = new FormData();
+      fd.append('name', company); fd.append('company', company); fd.append('email', email); fd.append('phone', phone);
+      fd.append('need', 'Staff accommodation quote'); fd.append('details', details);
+      setQuoteSending(true); setQuoteError(false); setQuoteNote('');
+      try {
+        const res = await fetch('/contact.php', { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json.ok) throw new Error();
+        setSent(true);
+        setQuoteNote('Received. An account manager will confirm pricing within 24 hours on +971 4 575 6773.');
+      } catch {
+        window.location.href = 'mailto:info@credence-group.ae?subject=' + encodeURIComponent('Accommodation quote — ' + company) +
+          '&body=' + encodeURIComponent('Company: ' + company + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\n' + details);
+        fail("We couldn't send that automatically, so your email app has been opened. You can also call +971 4 575 6773.");
+      } finally {
+        setQuoteSending(false);
+      }
     }
   };
 }
